@@ -36,66 +36,66 @@ interface Invoice {
 }
 
 const statusConfig: Record<string, { bg: string; color: string; dot: string; label: string }> = {
-  PAID:    { bg: '#f0fdf4', color: '#15803d', dot: '#22c55e', label: 'Paid'    },
-  SENT:    { bg: '#f0f9ff', color: '#0369a1', dot: '#38bdf8', label: 'Sent'    },
+  PAID: { bg: '#f0fdf4', color: '#15803d', dot: '#22c55e', label: 'Paid' },
+  SENT: { bg: '#f0f9ff', color: '#0369a1', dot: '#38bdf8', label: 'Sent' },
   OVERDUE: { bg: '#fff1f2', color: '#be123c', dot: '#fb7185', label: 'Overdue' },
-  DRAFT:   { bg: '#f4f4f5', color: '#52525b', dot: '#a1a1aa', label: 'Draft'   },
+  DRAFT: { bg: '#f4f4f5', color: '#52525b', dot: '#a1a1aa', label: 'Draft' },
 }
 
 const ArrowIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+    <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
   </svg>
 )
 
 const DownloadIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-    <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
   </svg>
 )
 
 const PrintIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="6 9 6 2 18 2 18 9"/>
-    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-    <rect x="6" y="14" width="12" height="8"/>
+    <polyline points="6 9 6 2 18 2 18 9" />
+    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+    <rect x="6" y="14" width="12" height="8" />
   </svg>
 )
 
 const TrashIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="3 6 5 6 21 6"/>
-    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-    <path d="M10 11v6"/><path d="M14 11v6"/>
-    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+    <path d="M10 11v6" /><path d="M14 11v6" />
+    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
   </svg>
 )
 
 const CheckIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
+    <polyline points="20 6 9 17 4 12" />
   </svg>
 )
 
 const SendIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="22" y1="2" x2="11" y2="13"/>
-    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+    <line x1="22" y1="2" x2="11" y2="13" />
+    <polygon points="22 2 15 22 11 13 2 9 22 2" />
   </svg>
 )
 
 const InvoiceDetail = () => {
-  const { id }      = useParams()
-  const navigate    = useNavigate()
-  const invoiceRef  = useRef<HTMLDivElement>(null)
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const invoiceRef = useRef<HTMLDivElement>(null)
 
-  const [invoice, setInvoice]             = useState<Invoice | null>(null)
-  const [loading, setLoading]             = useState(true)
-  const [updating, setUpdating]           = useState(false)
+  const [invoice, setInvoice] = useState<Invoice | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [updating, setUpdating] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [deleting, setDeleting]           = useState(false)
-  const [downloading, setDownloading]     = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [downloading, setDownloading] = useState(false)
 
   const fetchInvoice = async () => {
     try {
@@ -137,42 +137,168 @@ const InvoiceDetail = () => {
   }
 
   const handleDownloadPdf = async () => {
-    if (!invoiceRef.current || !invoice) return
+    if (!invoice) return
     setDownloading(true)
     try {
-      const element = invoiceRef.current
-      await new Promise((resolve) => requestAnimationFrame(() => resolve(null)))
-      const canvas = await html2canvas(element, {
-        scale: 3, useCORS: true, logging: false,
-        removeContainer: true, scrollX: 0,
-        scrollY: -window.scrollY,
-        windowWidth: element.scrollWidth,
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' })
+      const pageW = pdf.internal.pageSize.getWidth()
+      const margin = 48
+      let y = 56
+
+      // Brand
+      pdf.setFont('helvetica', 'bold')
+      pdf.setFontSize(16)
+      pdf.setTextColor(24, 24, 27)
+      pdf.text('BillMate', margin, y)
+
+      // Invoice number + status (right side)
+      pdf.setFontSize(10)
+      pdf.setTextColor(161, 161, 170)
+      pdf.text('ISSUE DATE', pageW - margin, y - 6, { align: 'right' })
+      pdf.setFontSize(11)
+      pdf.setTextColor(24, 24, 27)
+      pdf.text(
+        new Date(invoice.issueDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        pageW - margin, y + 10, { align: 'right' }
+      )
+      pdf.setFontSize(10)
+      pdf.setTextColor(161, 161, 170)
+      pdf.text('DUE DATE', pageW - margin, y + 28, { align: 'right' })
+      pdf.setFontSize(11)
+      pdf.setTextColor(24, 24, 27)
+      pdf.text(
+        new Date(invoice.dueDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        pageW - margin, y + 44, { align: 'right' }
+      )
+
+      y += 38
+      pdf.setFont('helvetica', 'bold')
+      pdf.setFontSize(24)
+      pdf.setTextColor(24, 24, 27)
+      pdf.text(invoice.invoiceNumber, margin, y)
+
+      y += 22
+      const s = statusConfig[invoice.status] || statusConfig.DRAFT
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'bold')
+      pdf.setTextColor(...hexToRgb(s.color))
+      pdf.text(s.label.toUpperCase(), margin, y)
+
+      // Billed to box
+      y += 30
+      pdf.setFillColor(250, 250, 250)
+      pdf.roundedRect(margin, y, pageW - margin * 2, 90, 6, 6, 'F')
+      let by = y + 22
+      pdf.setFontSize(9)
+      pdf.setTextColor(161, 161, 170)
+      pdf.text('BILLED TO', margin + 16, by)
+      by += 16
+      pdf.setFontSize(12)
+      pdf.setFont('helvetica', 'bold')
+      pdf.setTextColor(24, 24, 27)
+      pdf.text(invoice.client.name, margin + 16, by)
+      by += 15
+      pdf.setFont('helvetica', 'normal')
+      pdf.setFontSize(10.5)
+      pdf.setTextColor(113, 113, 122)
+      if (invoice.client.company) { pdf.text(invoice.client.company, margin + 16, by); by += 14 }
+      pdf.text(invoice.client.email, margin + 16, by)
+      by += invoice.client.phone ? 14 : 0
+      if (invoice.client.phone) pdf.text(invoice.client.phone, margin + 16, by)
+
+      y += 110
+
+      // Table header
+      const col2 = pageW - margin - 220
+      const col3 = pageW - margin - 150
+      const col4 = pageW - margin - 70
+
+      pdf.setFontSize(9)
+      pdf.setFont('helvetica', 'bold')
+      pdf.setTextColor(161, 161, 170)
+      pdf.text('DESCRIPTION', margin, y)
+      pdf.text('QTY', col2, y)
+      pdf.text('UNIT PRICE', col3, y)
+      pdf.text('AMOUNT', col4, y)
+      y += 6
+      pdf.setDrawColor(240, 240, 245)
+      pdf.line(margin, y, pageW - margin, y)
+      y += 18
+
+      pdf.setFont('helvetica', 'normal')
+      pdf.setFontSize(10.5)
+      invoice.items.forEach((item) => {
+        pdf.setTextColor(24, 24, 27)
+        pdf.text(item.description, margin, y)
+        pdf.setTextColor(113, 113, 122)
+        pdf.text(String(item.quantity), col2, y)
+        pdf.text(`$${item.unitPrice.toFixed(2)}`, col3, y)
+        pdf.setTextColor(24, 24, 27)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text(`$${item.amount.toFixed(2)}`, col4, y)
+        pdf.setFont('helvetica', 'normal')
+        y += 16
+        pdf.setDrawColor(244, 244, 245)
+        pdf.line(margin, y - 6, pageW - margin, y - 6)
+        y += 6
       })
-      const imgData  = canvas.toDataURL('image/jpeg', 1.0)
-      const pdf      = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' })
-      const pageW    = pdf.internal.pageSize.getWidth()
-      const pageH    = pdf.internal.pageSize.getHeight()
-      const imgW     = pageW
-      const imgH     = (canvas.height * imgW) / canvas.width
-      if (imgH <= pageH) {
-        pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH)
-      } else {
-        let left = imgH, pos = 0
-        pdf.addImage(imgData, 'JPEG', 0, pos, imgW, imgH)
-        left -= pageH
-        while (left > 0) {
-          pos -= pageH
-          pdf.addPage()
-          pdf.addImage(imgData, 'JPEG', 0, pos, imgW, imgH)
-          left -= pageH
-        }
+
+      // Totals
+      y += 16
+      const totalsX = pageW - margin - 180
+      pdf.setFontSize(10.5)
+      pdf.setTextColor(113, 113, 122)
+      pdf.text('Subtotal', totalsX, y)
+      pdf.setTextColor(24, 24, 27)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text(`$${invoice.subtotal.toFixed(2)}`, pageW - margin, y, { align: 'right' })
+
+      y += 18
+      pdf.setFont('helvetica', 'normal')
+      pdf.setTextColor(113, 113, 122)
+      pdf.text('Tax', totalsX, y)
+      pdf.setFont('helvetica', 'bold')
+      pdf.setTextColor(24, 24, 27)
+      pdf.text(`$${invoice.tax.toFixed(2)}`, pageW - margin, y, { align: 'right' })
+
+      y += 14
+      pdf.setFillColor(238, 242, 255)
+      pdf.roundedRect(totalsX - 14, y, pageW - margin - (totalsX - 14), 36, 8, 8, 'F')
+      y += 23
+      pdf.setFontSize(12)
+      pdf.setTextColor(79, 70, 229)
+      pdf.text('Total', totalsX, y)
+      pdf.setFontSize(15)
+      pdf.text(`$${invoice.total.toFixed(2)}`, pageW - margin, y, { align: 'right' })
+
+      // Notes
+      if (invoice.notes) {
+        y += 40
+        pdf.setDrawColor(240, 240, 245)
+        pdf.line(margin, y, pageW - margin, y)
+        y += 20
+        pdf.setFontSize(9)
+        pdf.setTextColor(161, 161, 170)
+        pdf.text('NOTES', margin, y)
+        y += 16
+        pdf.setFontSize(10.5)
+        pdf.setTextColor(113, 113, 122)
+        const noteLines = pdf.splitTextToSize(invoice.notes, pageW - margin * 2)
+        pdf.text(noteLines, margin, y)
       }
+
       pdf.save(`${invoice.invoiceNumber}.pdf`)
     } catch (err) {
       console.error('PDF error:', err)
     } finally {
       setDownloading(false)
     }
+  }
+
+  // add this helper above the component or in a utils file
+  function hexToRgb(hex: string): [number, number, number] {
+    const m = hex.replace('#', '').match(/.{1,2}/g)!
+    return [parseInt(m[0], 16), parseInt(m[1], 16), parseInt(m[2], 16)]
   }
 
   /* ── Loading ── */
