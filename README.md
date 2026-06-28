@@ -34,6 +34,8 @@
 - 📱 **Fully Responsive** — works seamlessly on mobile, tablet, and desktop
 - 🔒 **Protected Routes** — unauthenticated users cannot access dashboard pages
 - ☁️ **Cloud Database** — PostgreSQL hosted on Supabase with Prisma ORM and connection pooling
+- 🧾 **PDF Invoice Generator** — download any invoice as a clean, print-ready PDF, generated natively with jsPDF (no screenshots) directly from the Invoice Detail page
+- 🖨️ **Print Support** — print-optimized invoice layout via the browser print dialog
 
 ---
 
@@ -65,7 +67,7 @@ BillMate/
 │       │   ├── Clients.tsx          # Client management
 │       │   ├── Invoices.tsx         # Invoice list with filters
 │       │   ├── CreateInvoice.tsx    # Invoice builder with line items
-│       │   └── InvoiceDetail.tsx    # Single invoice view + actions
+│       │   └── InvoiceDetail.tsx    # Single invoice view, PDF export, print, and status actions
 │       └── App.tsx                  # Route definitions
 │
 ├── src/                             # Express backend (Node.js + TypeScript)
@@ -139,14 +141,19 @@ Then open [http://localhost:5173](http://localhost:5173) in your browser.
 | **React + TypeScript** | Frontend UI and component logic |
 | **Vite** | Frontend build tool and dev server |
 | **Tailwind CSS** | Utility-first responsive styling |
+| **JavaScript (ES6+)** | Core scripting language underlying both frontend and backend runtimes |
 | **Node.js + Express** | Backend server and REST API |
 | **TypeScript** | Type safety across frontend and backend |
-| **PostgreSQL + Supabase** | Cloud relational database |
+| **PostgreSQL** | Core relational database engine powering all persistent data |
+| **PostgreSQL + Supabase** | Cloud-hosted relational database |
 | **Prisma ORM** | Type-safe database queries and migrations |
 | **JWT + bcryptjs** | Authentication and password security |
 | **Zod** | Request validation and schema parsing |
+| **jsPDF** | Native PDF generation for invoice export (text-based, not screenshot-based) |
 | **OGL + ReactBits** | WebGL animations and UI effects |
 | **Axios** | HTTP client with JWT interceptor |
+| **HTML5 / CSS3** | Markup and styling foundation rendered by the frontend |
+| **SQL** | Underlying query language executed by Prisma against PostgreSQL |
 
 ---
 
@@ -173,6 +180,12 @@ GET    /api/invoices/:id        Get single invoice
 PUT    /api/invoices/:id        Update invoice status
 
 DELETE /api/invoices/:id        Delete invoice
+
+---
+
+## 🧾 PDF Invoice Generation
+
+Each invoice's detail page includes a **Download PDF** action that generates a polished, print-ready PDF of the invoice on the fly using **jsPDF**. The PDF is built natively (text, lines, and shapes drawn directly into the PDF document) rather than rasterized from a screenshot, which keeps the output sharp at any zoom level and keeps file sizes small. The generated file is named after the invoice number (e.g. `INV-0010.pdf`) and includes the brand header, status, billed-to details, line items, totals, and any notes. A **Print** action is also available for sending the invoice straight to a printer or browser print-to-PDF dialog.
 
 ---
 
