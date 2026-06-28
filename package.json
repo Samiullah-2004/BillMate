@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
-  "build": "tsc",
-  "postinstall": "npm run build",
-  "start": "node dist/index.js"
-},
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "build": "tsc",
+    "postinstall": "npm run build",
+    "start": "node dist/index.js",
+    "railway:build": "rm -rf dist && npm run build"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
