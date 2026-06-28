@@ -46,36 +46,40 @@ export const getInvoiceById = async (req: AuthRequest, res: Response): Promise<v
 }
 
 // POST /api/invoices
-export const createInvoice = async (req: AuthRequest, res: Response): Promise<void> => {
+// POST /api/invoices
+export const createInvoice = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
   const { clientId, dueDate, notes, tax, items } = req.body as {
-    clientId: number
-    dueDate: string
-    notes?: string
-    tax?: number
-    items: InvoiceItemInput[]
-  }
+    clientId: number;
+    dueDate: string;
+    notes?: string;
+    tax?: number;
+    items: InvoiceItemInput[];
+  };
 
   if (!clientId || !dueDate || !Array.isArray(items) || items.length === 0) {
-    res.status(400).json({ message: 'clientId, dueDate, and at least one item are required' })
-    return
+    res.status(400).json({ message: "clientId, dueDate, and at least one item are required" });
+    return;
   }
 
   for (const item of items) {
     if (!item.description || item.quantity == null || item.unitPrice == null) {
-      res.status(400).json({ message: 'Each item requires description, quantity, and unitPrice' })
-      return
+      res.status(400).json({ message: "Each item requires description, quantity, and unitPrice" });
+      return;
     }
   }
 
   try {
     // Verify the client belongs to this user
     const client = await prisma.client.findFirst({
-      where: { id: Number(clientId), userId: req.userId }
-    })
+      where: { id: Number(clientId), userId: req.userId },
+    });
 
     if (!client) {
-      res.status(404).json({ message: 'Client not found' })
-      return
+      res.status(404).json({ message: "Client not found" });
+      return;
     }
 
     // Server-side calculation — never trust client-sent totals
@@ -83,40 +87,77 @@ export const createInvoice = async (req: AuthRequest, res: Response): Promise<vo
       description: item.description,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
-      amount: item.quantity * item.unitPrice
-    }))
+      amount: item.quantity * item.unitPrice,
+    }));
 
-    const subtotal = computedItems.reduce((sum, item) => sum + item.amount, 0)
-    const taxAmount = tax ?? 0
-    const total = subtotal + taxAmount
+    const subtotal = computedItems.reduce((sum, item) => sum + item.amount, 0);
+    const taxAmount = tax ?? 0;
+    const total = subtotal + taxAmount;
 
- // Generate globally unique invoice number
-const invoiceCount = await prisma.invoice.count()
-const invoiceNumber = `INV-${String(invoiceCount + 1).padStart(4, '0')}`
+    let attempts = 0;
+    const maxAttempts = 5;
+    let invoiceCreated = false;
+    let invoice;
 
-    const invoice = await prisma.invoice.create({
-      data: {
-        invoiceNumber,
-        dueDate: new Date(dueDate),
-        notes,
-        subtotal,
-        tax: taxAmount,
-        total,
-        userId: req.userId as number,
-        clientId: Number(clientId),
-        items: {
-          create: computedItems
+    // Retry loop handles unexpected race conditions on the live deployment
+    while (!invoiceCreated && attempts < maxAttempts) {
+      attempts++;
+      try {
+        // Find the absolute highest alphabetical invoice number string
+        const lastInvoice = await prisma.invoice.findFirst({
+          orderBy: { invoiceNumber: "desc" },
+          select: { invoiceNumber: true },
+        });
+
+        let nextNumber = 1;
+        if (lastInvoice) {
+          const match = lastInvoice.invoiceNumber.match(/(\d+)$/);
+          if (match) nextNumber = parseInt(match[1], 10) + 1;
         }
-      },
-      include: { client: true, items: true }
-    })
+        const invoiceNumber = `INV-${String(nextNumber).padStart(4, "0")}`;
 
-    res.status(201).json(invoice)
+        // Attempt write operation
+        invoice = await prisma.invoice.create({
+          data: {
+            invoiceNumber,
+            dueDate: new Date(dueDate),
+            notes,
+            subtotal,
+            tax: taxAmount,
+            total,
+            userId: req.userId as number,
+            clientId: Number(clientId),
+            items: {
+              create: computedItems,
+            },
+          },
+          include: { client: true, items: true },
+        });
+
+        invoiceCreated = true; 
+      } catch (createError: any) {
+        // If it's a unique constraint failure code (P2002), intercept and retry
+        if (createError.code === "P2002") {
+          console.warn(`Invoice number collision detected on attempt ${attempts}. Retrying generation...`);
+          continue; 
+        }
+        throw createError; // Re-throw other errors to outer block
+      }
+    }
+
+    if (!invoiceCreated) {
+      res.status(500).json({ message: "Server busy. Could not securely generate a unique invoice number." });
+      return;
+    }
+
+    res.status(201).json(invoice);
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Server error' })
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-}
+};
+
+
 
 // PUT /api/invoices/:id
 export const updateInvoice = async (req: AuthRequest, res: Response): Promise<void> => {
