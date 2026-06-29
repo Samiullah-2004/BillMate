@@ -41,7 +41,7 @@
 
 ## 🚀 Live Demo
 
-**[→ View BillMate](https://billmate.vercel.app)**
+**[→ View BillMate](https://bill-mate-three.vercel.app/login)**
 
 ---
 
